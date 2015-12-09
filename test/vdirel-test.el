@@ -26,7 +26,61 @@
 ;;; Code:
 
 (require 'ert)
+(require 'test-helper)
+
+(ert-deftest vdirel-shouldUseFForFullnameWhenFNAbsent ()
+  (should (string= "Damien Cassou"
+                   (vdirel-contact-fullname '(("N" . "Damien;Cassou"))))))
+
+(ert-deftest vdirel-shouldUseFNForFullnameWhenPresent ()
+  (should (string= "Damien Cassou"
+                   (vdirel-contact-fullname '(("FN" . "Damien Cassou"))))))
+
+(ert-deftest vdirel-contactPropertyShouldReturnValueIfFound ()
+  (should (equal
+           "Damien Cassou"
+           (vdirel--contact-property "FN"
+                                     '(("FN" . "Damien Cassou"))))))
+
+(ert-deftest vdirel-contactPropertyShouldReturnNilIfNotFound ()
+  (should (null
+           (vdirel--contact-property "ZZ"
+                                     '(("FN" . "Damien Cassou"))))))
+
+(ert-deftest vdirel-contactPropertiesShouldReturn1ElementIfFound ()
+  (should (equal
+           '("Damien Cassou")
+           (vdirel--contact-properties "FN"
+                                       '(("FN" . "Damien Cassou"))))))
+
+(ert-deftest vdirel-contactPropertiesShouldReturnElementsIfFound ()
+  (should (equal
+           '("Damien" "Cassou")
+           (vdirel--contact-properties "FN"
+                                       '(("FN" . "Damien")
+                                         ("FN" . "Cassou"))))))
+
+(ert-deftest vdirel-contactPropertiesShouldReturnEmptyIfNotFound ()
+  (should (null
+           (vdirel--contact-properties "ZZ"
+                                       '(("FN" . "Damien Cassou"))))))
+
+(ert-deftest vdirel-contact-emails-find-every-emails ()
+  (should (equal
+           '("me@foo.com" "me@bar.eu")
+           (vdirel-contact-emails
+            '(("EMAIL" . "me@foo.com")
+              ("EMAIL;TYPE=home" . "me@bar.eu"))))))
+
+(ert-deftest vdirel--helm-email-candidates ()
+  (should
+   (equal
+    '(("\"Damien Cassou\" <me@foo.com>" . ("Damien Cassou" "me@foo.com"))
+      ("\"Damien Cassou\" <me@bar.eu>" . ("Damien Cassou" "me@bar.eu")))
+    (vdirel--helm-email-candidates
+     '((("FN" . "Damien Cassou")
+        ("EMAIL" . "me@foo.com")
+        ("EMAIL;TYPE=home" . "me@bar.eu")))))))
 
 (provide 'vdirel-tests)
-
 ;;; vdirel-tests.el ends here
