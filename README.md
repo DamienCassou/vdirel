@@ -9,7 +9,9 @@
 
 ## Summary
 
-Manipulate vdir (i.e., vcard) repositories from Emacs
+Manipulate
+[vdir](https://vdirsyncer.readthedocs.org/en/stable/vdir.html) (i.e.,
+vcard) repositories from Emacs.
 
 ## Installing
 
