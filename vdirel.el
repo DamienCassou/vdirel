@@ -133,6 +133,27 @@ If REPOSITORY is absent or nil, use the function `vdirel--repository'."
            (seq-remove (lambda (pair) (string= (car pair) repository))
                        vdirel--cache-contacts)))))
 
+(defun vdirel--debug-info (string &rest objects)
+  "Log STRING with OBJECTS as if using `format`."
+  (apply #'message (concat "[carldavel] info: " string) objects))
+
+;;;###autoload
+(defun vdirel-vdirsyncer-sync-server (&optional repository)
+  "Ask vdirsyncer to sync REPOSITORY with the server.
+You probably want to call `vdirel-refresh-cache' right after
+this.  Currently, REPOSITORY is ignored and \"vdirsyncer sync\" is called
+without further argument."
+  (interactive)
+  (vdirel--debug-info "Executing vdirsyncer sync")
+  (save-excursion
+    (with-current-buffer (get-buffer-create "*vdirel-server-sync*")
+      (call-process
+       "vdirsyncer"
+       nil
+       (current-buffer)
+       nil
+       "sync")))
+  (vdirel--debug-info "Finshed executing vdirsyncer sync"))
 
 (defun vdirel--helm-email-candidates (contacts)
   "Return a list of contact emails for every contact in CONTACTS."
