@@ -124,8 +124,15 @@ If REPOSITORY is absent or nil, use the function `vdirel--repository'."
 
 (defun vdirel-refresh-cache (&optional repository)
   "Parse all contacts in REPOSITORY and store the result."
-  (let ((repository (or repository (vdirel--repository))))
-    (add-to-list 'vdirel--cache-contacts (cons repository (vdirel--build-contacts)))))
+  (interactive)
+  (let* ((repository (or repository (vdirel--repository)))
+         (contacts (vdirel--build-contacts repository)))
+    (setq vdirel--cache-contacts
+          (cons
+           (cons repository contacts)
+           (seq-remove (lambda (pair) (string= (car pair) repository))
+                       vdirel--cache-contacts)))))
+
 
 (defun vdirel--helm-email-candidates (contacts)
   "Return a list of contact emails for every contact in CONTACTS."
