@@ -122,7 +122,7 @@ through `org-vcard-import-parse'."
 If REPOSITORY is absent or nil, use the function `vdirel--repository'."
   (mapcar #'vdirel--parse-file-to-contact (vdirel--contact-files)))
 
-(defun vdirel--cache-refresh-contacts (&optional repository)
+(defun vdirel-refresh-cache (&optional repository)
   "Parse all contacts in REPOSITORY and store the result."
   (let ((repository (or repository (vdirel--repository))))
     (add-to-list 'vdirel--cache-contacts (cons repository (vdirel--build-contacts)))))
@@ -151,17 +151,23 @@ CANDIDATE is ignored."
                      ", ")))
 
 ;;;###autoload
-(defun vdirel-helm-select-email (&optional repository)
-  "Let user choose an email address from contacts in REPOSITORY."
-  (interactive)
-  (let ((repository (or repository (vdirel--repository))))
-    (helm
-     :prompt "Contacts: "
-     :sources
-     (helm-build-sync-source "Contacts"
-       :candidates (vdirel--helm-email-candidates (vdirel--cache-contacts repository))
-       :action (helm-make-actions
-                "Insert" #'vdirel--helm-insert-contact-email)))))
+(defun vdirel-helm-select-email (&optional refresh repository)
+  "Let user choose an email address from (REFRESH'ed) REPOSITORY."
+  (interactive
+   (list (cond ((equal '(16) current-prefix-arg) 'server)
+               ((consp current-prefix-arg) 'cache))
+         (vdirel--repository)))
+  (when (eq refresh 'server)
+    (vdirel-vdirsyncer-sync-server repository))
+  (when (or refresh (null (vdirel--cache-contacts repository)))
+    (vdirel-refresh-cache repository))
+  (helm
+   :prompt "Contacts: "
+   :sources
+   (helm-build-sync-source "Contacts"
+     :candidates (vdirel--helm-email-candidates (vdirel--cache-contacts repository))
+     :action (helm-make-actions
+              "Insert" #'vdirel--helm-insert-contact-email))))
 
 (provide 'vdirel)
 
