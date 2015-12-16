@@ -2,20 +2,17 @@
 [![Coverage Status](https://coveralls.io/repos/DamienCassou/vdirel/badge.svg)](https://coveralls.io/r/DamienCassou/vdirel)
 [![MELPA](http://melpa.org/packages/vdirel-badge.svg)](http://melpa.org/#/vdirel)
 [![MELPA stable](http://stable.melpa.org/packages/vdirel-badge.svg)](http://stable.melpa.org/#/vdirel)
-[![Tag Version](https://img.shields.io/github/tag/DamienCassou/vdirel.svg)](https://github.com/DamienCassou/vdirel/tags)
 [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
 # vdirel
 
 ## Summary
 
-Manipulate
-[vdir](https://vdirsyncer.readthedocs.org/en/stable/vdir.html) (i.e.,
-vcard) repositories from Emacs.
+[vdir](https://vdirsyncer.readthedocs.org/en/stable/vdir.html) is a standard for storing calendars and contacts on a file system much like maildir is for emails. `vdirel` provides utility functions to manipulate vdir repositories from Emacs.
 
 ## Installing
 
-Use melpa.
+Use [melpa](http://melpa.org/) and `M-x package-install`.
 
 ## Contributing
 
