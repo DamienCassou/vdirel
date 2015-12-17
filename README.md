@@ -30,7 +30,8 @@ Step by step:
 
 1. `M-x vdirel-helm-select-email` to start the selection process
 2. Type some letters to select a contact email address
-3. Select the email address with `M-SPC`
+3. Select the email address with `M-SPC` (in the mode-line, the `M<x>`
+   counter increases to confirm the selection)
 4. While you want to insert more email addresses, erase the minibuffer
    and go back to step 2
 5. When you are done, press `RET` to insert all selected email
@@ -49,5 +50,5 @@ See [COPYING][]. Copyright (c) 2015 Damien Cassou.
 [CONTRIBUTING]: ./CONTRIBUTING.md
 [COPYING]: ./COPYING
 
-<!--  LocalWords:  minibuffer fullnames
+<!--  LocalWords:  minibuffer fullnames modeline
  -->
