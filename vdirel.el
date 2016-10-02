@@ -39,6 +39,9 @@
 
 (defcustom vdirel-repository "~/contacts"
   "Path to the vdir folder.")
+
+(defcustom vdirel-repositories nil
+  "List of paths to vdir folders.")
 
 (defvar vdirel--cache-contacts '()
   "Cache where contacts are stored to avoid repeated parsing.
@@ -94,6 +97,27 @@ Return nil if PROPERTY is not in CONTACT."
   "Return the path to the vdir folder.
 This is an expantion of the variable `vdirel-repository'."
   (expand-file-name vdirel-repository))
+
+;;;###autoload
+(defun vdirel-switch-repository (repository)
+  "Change current vdir folder to REPOSITORY.
+Let the user choose a repository from `vdirel-repositories` and set
+`vdirel-repository` accordingly."
+  (interactive
+   (list (if (not (consp vdirel-repositories))
+             (progn
+               (message "No repository found in `vdirel-repositories`.")
+               vdirel-repository)
+           (if (= 1 (length vdirel-repositories))
+               (progn
+                 (message "Only one entry in `vdirel-repositories.")
+                 (car vdirel-repositories))
+             (completing-read "Choose new vdirel repository: "
+                              vdirel-repositories
+                              nil
+                              'confirm)))))
+  (setq vdirel-repository repository)
+  (message "vdirel switched to %s repository." repository))
 
 (defun vdirel--cache-contacts (&optional repository)
   "Return the contacts in cache for REPOSITORY."
