@@ -16,8 +16,8 @@ Use [melpa](http://melpa.org/) and `M-x package-install`.
 
 ## Using
 
-First, you must configure variable `vdirel-repository` to your vdir
-repository.
+First, you must configure the variable `vdirel-repository` to your
+vdir repository. If you have more than one repository, read below.
 
 ### Inserting Email addresses
 
@@ -37,6 +37,10 @@ Step by step:
 5. When you are done, press `RET` to insert all selected email
    addresses and associated fullnames in a comma-separated list
 
+### More than one repository
+
+If you use more than one repository, configure `vdirel-repositories`
+and call `vdirel-switch-repository`.
 
 ## Contributing
 
