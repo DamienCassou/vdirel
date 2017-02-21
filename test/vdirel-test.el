@@ -75,8 +75,8 @@
 (ert-deftest vdirel--helm-email-candidates ()
   (should
    (equal
-    '(("\"Damien Cassou\" <me@foo.com>" . ("Damien Cassou" "me@foo.com"))
-      ("\"Damien Cassou\" <me@bar.eu>" . ("Damien Cassou" "me@bar.eu")))
+    '(("Damien Cassou <me@foo.com>" . ("Damien Cassou" "me@foo.com"))
+      ("Damien Cassou <me@bar.eu>" . ("Damien Cassou" "me@bar.eu")))
     (vdirel--helm-email-candidates
      '((("FN" . "Damien Cassou")
         ("EMAIL" . "me@foo.com")
