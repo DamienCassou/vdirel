@@ -26,7 +26,7 @@
 ;;; Code:
 
 (require 'ert)
-(require 'test-helper)
+(require 'vdirel)
 
 (ert-deftest vdirel-shouldUseFForFullnameWhenFNAbsent ()
   (should (string= "Damien Cassou"
@@ -82,5 +82,5 @@
         ("EMAIL" . "me@foo.com")
         ("EMAIL;TYPE=home" . "me@bar.eu")))))))
 
-(provide 'vdirel-tests)
-;;; vdirel-tests.el ends here
+(provide 'vdirel-test)
+;;; vdirel-test.el ends here

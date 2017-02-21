@@ -20,7 +20,7 @@
   (f-expand "sandbox" vdirel-test-path))
 
 (when (f-exists? vdirel-sandbox-path)
-  (error "Something is already in %s. Check and destroy it yourself" vdirel-sandbox-path))
+  (error "Something is already in %s.  Check and destroy it yourself" vdirel-sandbox-path))
 
 (defmacro within-sandbox (&rest body)
   "Evaluate BODY in an empty sandbox directory."
@@ -31,9 +31,4 @@
      ,@body
      (f-delete default-directory :force)))
 
-(require 'ert)
-
-(require 'vdirel)
-
-(provide 'test-helper)
 ;;; test-helper.el ends here
