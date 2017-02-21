@@ -33,12 +33,6 @@
 
 (require 'ert)
 
-(require 'undercover)
-(undercover "*.el" "vdirel/*.el"
-            (:exclude "*-test.el")
-            ;; (:send-report nil)
-            (:report-file "/tmp/undercover-report.json"))
-
 (require 'vdirel)
 
 (provide 'test-helper)
