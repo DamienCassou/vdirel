@@ -8,7 +8,7 @@
 (depends-on "org-vcard")
 
 (development
- (depends-on "cask-package-toolset")
+ (depends-on "f")
  (depends-on "ert")
  (depends-on "ert-runner")
- (depends-on "f"))
+ (depends-on "package-lint"))
