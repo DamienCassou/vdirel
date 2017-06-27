@@ -11,7 +11,7 @@ PROJ_ROOT   := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 EMACS_D      = ~/.emacs.d
 USER_ELPA_D  = $(EMACS_D)/elpa
 
-SRCS         = $(filter-out %-pkg.el, $(wildcard *.el))
+SRCS         = $(filter-out %-autoloads.el, $(filter-out %-pkg.el, $(wildcard *.el)))
 EXAMPLES     = $(wildcard examples/*.el)
 TESTS        = $(wildcard test/*.el)
 TAR          = $(DIST)/vdirel-$(VERSION).tar
@@ -53,7 +53,7 @@ check : test lint
 test: unit
 
 unit: $(PKG_DIR) clean-elc
-	${CASK} exec ert-runner
+	${CASK} exec buttercup -L .
 
 lint : $(SRCS) clean-elc
 	# Byte compile all and stop on any warning or error

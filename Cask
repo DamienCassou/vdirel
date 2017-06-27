@@ -8,7 +8,6 @@
 (depends-on "org-vcard")
 
 (development
- (depends-on "f")
- (depends-on "ert")
- (depends-on "ert-runner")
- (depends-on "package-lint"))
+ (depends-on "package-lint")
+ (depends-on "buttercup")
+ (depends-on "undercover"))

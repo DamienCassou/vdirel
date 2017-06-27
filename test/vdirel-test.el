@@ -25,62 +25,65 @@
 
 ;;; Code:
 
-(require 'ert)
+(declare-function undercover "undercover")
+
+(when (require 'undercover nil t)
+  (undercover "*.el"))
+
 (require 'vdirel)
 
-(ert-deftest vdirel-shouldUseFForFullnameWhenFNAbsent ()
-  (should (string= "Damien Cassou"
-                   (vdirel-contact-fullname '(("N" . "Damien;Cassou"))))))
+(require 'buttercup)
 
-(ert-deftest vdirel-shouldUseFNForFullnameWhenPresent ()
-  (should (string= "Damien Cassou"
-                   (vdirel-contact-fullname '(("FN" . "Damien Cassou"))))))
+(describe "vdirel"
+  (describe "knows how to extract a contact's fullname"
+    (it "when defined through N"
+      (expect (vdirel-contact-fullname '(("N" . "Damien;Cassou")))
+              :to-equal "Damien Cassou"))
 
-(ert-deftest vdirel-contactPropertyShouldReturnValueIfFound ()
-  (should (equal
-           "Damien Cassou"
-           (vdirel--contact-property "FN"
-                                     '(("FN" . "Damien Cassou"))))))
+    (it "when defined through FN"
+      (expect (vdirel-contact-fullname '(("FN" . "Damien Cassou")))
+              :to-equal "Damien Cassou")))
 
-(ert-deftest vdirel-contactPropertyShouldReturnNilIfNotFound ()
-  (should (null
-           (vdirel--contact-property "ZZ"
-                                     '(("FN" . "Damien Cassou"))))))
+  (describe "contact-property"
+    (it "returns entry if property is found"
+      (expect (vdirel--contact-property "FN" '(("FN" . "Damien Cassou")))
+              :to-equal "Damien Cassou"))
 
-(ert-deftest vdirel-contactPropertiesShouldReturn1ElementIfFound ()
-  (should (equal
-           '("Damien Cassou")
-           (vdirel--contact-properties "FN"
-                                       '(("FN" . "Damien Cassou"))))))
+    (it "returns nil if property is not found"
+      (expect (vdirel--contact-property "ZZ" '(("FN" . "Damien Cassou")))
+              :to-be nil)))
 
-(ert-deftest vdirel-contactPropertiesShouldReturnElementsIfFound ()
-  (should (equal
-           '("Damien" "Cassou")
-           (vdirel--contact-properties "FN"
-                                       '(("FN" . "Damien")
-                                         ("FN" . "Cassou"))))))
+  (describe "contact-properties"
+    (it "returns 1 element if 1 found"
+      (expect (vdirel--contact-properties "FN" '(("FN" . "Damien Cassou")))
+              :to-equal '("Damien Cassou")))
 
-(ert-deftest vdirel-contactPropertiesShouldReturnEmptyIfNotFound ()
-  (should (null
-           (vdirel--contact-properties "ZZ"
-                                       '(("FN" . "Damien Cassou"))))))
+    (it "returns several elements if several found"
+      (expect (vdirel--contact-properties "FN"
+                                          '(("FN" . "Damien")
+                                            ("FN" . "Cassou")))
+              :to-equal '("Damien" "Cassou")))
 
-(ert-deftest vdirel-contact-emails-find-every-emails ()
-  (should (equal
-           '("me@foo.com" "me@bar.eu")
-           (vdirel-contact-emails
-            '(("EMAIL" . "me@foo.com")
-              ("EMAIL;TYPE=home" . "me@bar.eu"))))))
+    (it "returns nil if none found"
+      (expect (vdirel--contact-properties "ZZ" '(("FN" . "Damien Cassou")))
+              :to-equal nil)))
 
-(ert-deftest vdirel--helm-email-candidates ()
-  (should
-   (equal
-    '(("Damien Cassou <me@foo.com>" . ("Damien Cassou" "me@foo.com"))
-      ("Damien Cassou <me@bar.eu>" . ("Damien Cassou" "me@bar.eu")))
-    (vdirel--helm-email-candidates
-     '((("FN" . "Damien Cassou")
-        ("EMAIL" . "me@foo.com")
-        ("EMAIL;TYPE=home" . "me@bar.eu")))))))
+  (describe "contact-emails"
+    (it "find every emails"
+      (expect (vdirel-contact-emails
+               '(("EMAIL" . "me@foo.com")
+                 ("EMAIL;TYPE=home" . "me@bar.eu")))
+              :to-equal '("me@foo.com" "me@bar.eu"))))
+
+  (describe "helm-email-candidates"
+    (it "list all emails of a contact"
+      (expect (vdirel--helm-email-candidates
+               '((("FN" . "Damien Cassou")
+                  ("EMAIL" . "me@foo.com")
+                  ("EMAIL;TYPE=home" . "me@bar.eu"))))
+              :to-equal
+              '(("Damien Cassou <me@foo.com>" . ("Damien Cassou" "me@foo.com"))
+                ("Damien Cassou <me@bar.eu>" . ("Damien Cassou" "me@bar.eu")))))))
 
 (provide 'vdirel-test)
 ;;; vdirel-test.el ends here
