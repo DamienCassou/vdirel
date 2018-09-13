@@ -158,7 +158,7 @@ If REPOSITORY is absent or nil, use the function `vdirel--repository'."
 
 (defun vdirel--debug-info (string &rest objects)
   "Log STRING with OBJECTS as if using `format`."
-  (apply #'message (concat "[carldavel] info: " string) objects))
+  (apply #'message (concat "[vdirel] info: " string) objects))
 
 ;;;###autoload
 (defun vdirel-vdirsyncer-sync-server (&optional repository)
