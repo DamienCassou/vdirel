@@ -1,10 +1,10 @@
 ;;; vdirel.el --- Manipulate vdir (i.e., vCard) repositories
 
-;; Copyright (C) 2015 Damien Cassou
+;; Copyright (C) 2015-2018 Damien Cassou
 
 ;; Author: Damien Cassou <damien@cassou.me>
-;; Version: 0.1.0
-;; GIT: https://github.com/DamienCassou/vdirel
+;; Version: 0.1.1
+;; Url: https://github.com/DamienCassou/vdirel
 ;; Package-Requires: ((emacs "24.4") (org-vcard "0.1.0") (helm "1.7.0") (seq "1.11"))
 ;; Created: 09 Dec 2015
 
