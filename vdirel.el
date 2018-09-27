@@ -37,10 +37,13 @@
   :group 'applications)
 
 (defcustom vdirel-repository "~/contacts"
-  "Path to the vdir folder.")
+  "Path to the vdir folder."
+  :type 'directory)
 
 (defcustom vdirel-repositories nil
-  "List of paths to vdir folders.")
+  "List of paths to vdir folders."
+  :type '(repeat directory))
+
 
 (defvar vdirel--cache-contacts '()
   "Cache where contacts are stored to avoid repeated parsing.
