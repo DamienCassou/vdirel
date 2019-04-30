@@ -130,7 +130,7 @@ Let the user choose a repository from `vdirel-repositories` and set
   "Return a list of vCard files in REPOSITORY.
 If REPOSITORY is absent or nil, use the function `vdirel--repository'."
   (let ((repository (or repository (vdirel--repository))))
-    (directory-files repository t "\.vcf$" t)))
+    (directory-files repository t "\\.vcf$" t)))
 
 (defun vdirel--parse-file-to-contact (filename)
   "Return a list representing the vCard in inside FILENAME.
