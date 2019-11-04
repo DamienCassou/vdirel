@@ -84,9 +84,11 @@ Return nil if PROPERTY is not in CONTACT."
   "Return the fullname of CONTACT."
   (or
    (vdirel--contact-property "FN" contact)
+   (if (equal (vdirel--contact-property "N" contact) nil)
+       ""
    (replace-regexp-in-string
     ";" " "
-    (vdirel--contact-property "N" contact))))
+    (vdirel--contact-property "N" contact)))))
 
 (defun vdirel-contact-emails (contact)
   "Return a list of CONTACT's email addresses."

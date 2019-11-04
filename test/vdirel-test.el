@@ -85,5 +85,14 @@
               '(("Damien Cassou <me@foo.com>" . ("Damien Cassou" "me@foo.com"))
                 ("Damien Cassou <me@bar.eu>" . ("Damien Cassou" "me@bar.eu")))))))
 
+
+
+(describe "contact-no-name"
+          (it "contacts without FN or F should return empty string"
+              (expect (vdirel-contact-fullname
+                       '(("EMAIL" . "me@foo.com")
+                         ("EMAIL;TYPE=home" . "me@bar.eu")))
+                      :to-equal "")))
+
 (provide 'vdirel-test)
 ;;; vdirel-test.el ends here
