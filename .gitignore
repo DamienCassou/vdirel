@@ -2,11 +2,8 @@
 *.elc
 *~
 
-# Cask
-/.cask
-dist
-
 # Ecukes
 /features/project/.cask
 /features/project/test/*.el
 /test/contacts/*.vcf
+/makel.mk
