@@ -3,9 +3,9 @@
 ;; Copyright (C) 2015-2018 Damien Cassou
 
 ;; Author: Damien Cassou <damien@cassou.me>
-;; Version: 0.1.1
+;; Version: 0.2.0
 ;; Url: https://github.com/DamienCassou/vdirel
-;; Package-Requires: ((emacs "24.4") (org-vcard "0.1.0") (helm "1.7.0") (seq "1.11"))
+;; Package-Requires: ((emacs "24.4") (org-vcard "0.1.0") (seq "1.11"))
 ;; Created: 09 Dec 2015
 
 ;; This file is not part of GNU Emacs.
@@ -30,7 +30,6 @@
 ;;; Code:
 (require 'org-vcard)
 (require 'seq)
-(require 'helm)
 
 (defgroup vdirel nil
   "Manipulate vdir (i.e., vCard) repositories from Emacs"
@@ -100,6 +99,19 @@ Return nil if PROPERTY is not in CONTACT."
 This is an expansion of the variable `vdirel-repository'."
   (expand-file-name vdirel-repository))
 
+(defun vdirel--email-candidates (contacts)
+  "Return a list of contact emails for every contact in CONTACTS."
+  (seq-mapcat (lambda (contact)
+                (mapcar (lambda (email)
+                          (cons (format "%s <%s>"
+                                        (vdirel-contact-fullname contact)
+                                        email)
+                                (list (vdirel-contact-fullname contact)
+                                      email)))
+                        (vdirel-contact-emails contact)))
+              contacts))
+
+
 ;;;###autoload
 (defun vdirel-switch-repository (repository)
   "Change current vdir folder to REPOSITORY.
@@ -146,6 +158,14 @@ through `org-vcard-import-parse'."
 If REPOSITORY is absent or nil, use the function `vdirel--repository'."
   (mapcar #'vdirel--parse-file-to-contact (vdirel--contact-files)))
 
+(defun vdirel--ensure-cache-ready (&optional refresh repository)
+  "Ensure REPOSITORY is REFRESH'd."
+  (when (eq refresh 'server)
+    (vdirel-vdirsyncer-sync-server repository))
+  (when (or refresh (null (vdirel--cache-contacts repository)))
+    (vdirel-refresh-cache repository)))
+
+;;;###autoload
 (defun vdirel-refresh-cache (&optional repository)
   "Parse all contacts in REPOSITORY and store the result."
   (interactive)
@@ -179,55 +199,11 @@ without further argument."
        "sync")))
   (vdirel--debug-info "Finshed executing vdirsyncer sync"))
 
-(defun vdirel--helm-email-candidates (contacts)
-  "Return a list of contact emails for every contact in CONTACTS."
-  (seq-mapcat (lambda (contact)
-                (mapcar (lambda (email)
-                          (cons (format "%s <%s>"
-                                        (vdirel-contact-fullname contact)
-                                        email)
-                                (list (vdirel-contact-fullname contact)
-                                      email
-                                      (vdirel--contact-property "VDIREL-FILENAME" contact))))
-                        (vdirel-contact-emails contact)))
-              contacts))
-
-(defun vdirel--helm-insert-contact-email (candidate)
-  "Print selected contacts as comma-separated text.
-CANDIDATE is ignored."
-  (ignore candidate)
-  (insert (mapconcat (lambda (pair)
-                       (format "\"%s\" <%s>"
-                               (car pair)
-                               (cadr pair)))
-                     (helm-marked-candidates)
-                     ", ")))
-
 (defun vdirel--open-file (candidate)
   "Open files assosiated to selected contacts.
 CANDIDATE is ignored."
   (ignore candidate)
   (mapcar (lambda (entry) (find-file (caddr entry))) (helm-marked-candidates)))
-
-;;;###autoload
-(defun vdirel-helm-select-email (&optional refresh repository)
-  "Let user choose an email address from (REFRESH'ed) REPOSITORY."
-  (interactive
-   (list (cond ((equal '(16) current-prefix-arg) 'server)
-               ((consp current-prefix-arg) 'cache))
-         (vdirel--repository)))
-  (when (eq refresh 'server)
-    (vdirel-vdirsyncer-sync-server repository))
-  (when (or refresh (null (vdirel--cache-contacts repository)))
-    (vdirel-refresh-cache repository))
-  (helm
-   :prompt "Contacts: "
-   :sources
-   (helm-build-sync-source "Contacts"
-     :candidates (vdirel--helm-email-candidates (vdirel--cache-contacts repository))
-     :action (helm-make-actions
-              "Insert" #'vdirel--helm-insert-contact-email
-              "Open file" #'vdirel--open-file))))
 
 (provide 'vdirel)
 
