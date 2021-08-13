@@ -189,7 +189,8 @@ without further argument."
                                         (vdirel-contact-fullname contact)
                                         email)
                                 (list (vdirel-contact-fullname contact)
-                                      email)))
+                                      email
+                                      (vdirel--contact-property "VDIREL-FILENAME" contact))))
                         (vdirel-contact-emails contact)))
               contacts))
 
@@ -203,6 +204,12 @@ CANDIDATE is ignored."
                                (cadr pair)))
                      (helm-marked-candidates)
                      ", ")))
+
+(defun vdirel--open-file (candidate)
+  "Open files assosiated to selected contacts.
+CANDIDATE is ignored."
+  (ignore candidate)
+  (mapcar (lambda (entry) (find-file (caddr entry))) (helm-marked-candidates)))
 
 ;;;###autoload
 (defun vdirel-helm-select-email (&optional refresh repository)
@@ -221,7 +228,8 @@ CANDIDATE is ignored."
    (helm-build-sync-source "Contacts"
      :candidates (vdirel--helm-email-candidates (vdirel--cache-contacts repository))
      :action (helm-make-actions
-              "Insert" #'vdirel--helm-insert-contact-email))))
+              "Insert" #'vdirel--helm-insert-contact-email
+              "Open file" #'vdirel--open-file))))
 
 (provide 'vdirel)
 
