@@ -137,11 +137,9 @@ If REPOSITORY is absent or nil, use the function `vdirel--repository'."
 Each element in the list is a cons cell containing the vCard property name
 in the `car', and the value of that property in the `cdr'.  Parsing is done
 through `org-vcard-import-parse'."
-  (with-temp-buffer
-    (insert-file-contents filename)
     (cons
      (cons "VDIREL-FILENAME" filename)
-     (car (org-vcard-import-parse "buffer")))))
+     (car (org-vcard-import-parse "buffer" filename))))
 
 (defun vdirel--build-contacts (&optional repository)
   "Return a list of contacts in REPOSITORY.
