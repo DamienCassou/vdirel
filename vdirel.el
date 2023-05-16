@@ -5,7 +5,7 @@
 ;; Author: Damien Cassou <damien@cassou.me>
 ;; Version: 0.2.0
 ;; Url: https://github.com/DamienCassou/vdirel
-;; Package-Requires: ((emacs "24.4") org-vcard (seq "1.11"))
+;; Package-Requires: ((emacs "25.1") org-vcard (seq "1.11"))
 ;; Created: 09 Dec 2015
 
 ;; This file is not part of GNU Emacs.
