@@ -5,34 +5,25 @@
 ;; Author: Damien Cassou <damien@cassou.me>
 ;; Version: 0.2.0
 ;; Url: https://github.com/DamienCassou/vdirel
-;; Package-Requires: ((emacs "24.4") (org-vcard "0.1.0") (seq "1.11"))
+;; Package-Requires: ((emacs "24.4") org-vcard (seq "1.11"))
 ;; Created: 09 Dec 2015
 
 ;; This file is not part of GNU Emacs.
 
-;; This program is free software: you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
-
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;; License:
+;;
+;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; Commentary:
 
-;; Manipulate vdir (i.e., vCard) repositories from Emacs
+;; Manipulate vdir (i.e., vCard) collections from Emacs
 
 ;;; Code:
 (require 'org-vcard)
 (require 'seq)
 
 (defgroup vdirel nil
-  "Manipulate vdir (i.e., vCard) repositories from Emacs"
+  "Manipulate vdir (i.e., vCard) repositories from Emacs."
   :group 'applications)
 
 (defcustom vdirel-repository "~/contacts"
@@ -80,12 +71,12 @@ Return nil if PROPERTY is not in CONTACT."
                              contact)))
 
 (defun vdirel-contact-fullname (contact)
-  "Return the fullname of CONTACT."
+  "Return the fullname of CONTACT or email if no name is defined."
   (or
    (vdirel--contact-property "FN" contact)
-   (replace-regexp-in-string
-    ";" " "
-    (vdirel--contact-property "N" contact))))
+   (if-let ((name (vdirel--contact-property "N" contact)))
+       (replace-regexp-in-string ";" " " name)
+     (vdirel--contact-property "EMAIL" contact))))
 
 (defun vdirel-contact-emails (contact)
   "Return a list of CONTACT's email addresses."
@@ -149,9 +140,9 @@ If REPOSITORY is absent or nil, use the function `vdirel--repository'."
 Each element in the list is a cons cell containing the vCard property name
 in the `car', and the value of that property in the `cdr'.  Parsing is done
 through `org-vcard-import-parse'."
-    (cons
-     (cons "VDIREL-FILENAME" filename)
-     (car (org-vcard-import-parse "buffer" filename))))
+  (cons
+   (cons "VDIREL-FILENAME" filename)
+   (car (org-vcard-import-parse "buffer" filename))))
 
 (defun vdirel--build-contacts (&optional repository)
   "Return a list of contacts in REPOSITORY.
@@ -199,11 +190,17 @@ without further argument."
        "sync")))
   (vdirel--debug-info "Finshed executing vdirsyncer sync"))
 
-(defun vdirel--open-file (candidate)
-  "Open files assosiated to selected contacts.
-CANDIDATE is ignored."
-  (ignore candidate)
-  (mapcar (lambda (entry) (find-file (caddr entry))) (helm-marked-candidates)))
+;;;###autoload
+(defun vdirel-select-email (&optional refresh repository)
+  "Select email address and optionally `REFRESH' the `REPOSITORY'."
+  (interactive)
+  (let ((repo (or repository vdirel-repository)))
+    (vdirel--ensure-cache-ready refresh repo)
+    (if-let ((res (completing-read "Contacts: "
+                                   (vdirel--email-candidates (vdirel--cache-contacts repo))
+                                   nil
+                                   'require-match)))
+        (insert (format "%s, " res)))))
 
 (provide 'vdirel)
 
