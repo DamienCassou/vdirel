@@ -53,8 +53,8 @@ CANDIDATE is ignored."
    (helm-build-sync-source "Contacts"
                            :candidates (vdirel--email-candidates (vdirel--cache-contacts repository))
                            :action (helm-make-actions
-                                    "Insert" #'vdirel--helm-insert-contact-email
-                                    "Open file" #'vdirel--open-file))))
+                                    "Insert" #'vdirel-helm--insert-contact-email
+                                    "Open file" #'vdirel-helm--open-file))))
 
 (provide 'vdirel-helm)
 
