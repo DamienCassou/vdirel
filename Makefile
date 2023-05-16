@@ -1,3 +1,5 @@
+EMACS ?= emacs
+
 ELPA_DEPENDENCIES=package-lint let-alist buttercup org-vcard helm async
 
 ELPA_ARCHIVES=melpa-stable gnu
@@ -17,6 +19,10 @@ makel.mk:
 		--retry 9 --retry-delay 9 \
 		-O https://gitlab.petton.fr/DamienCassou/makel/raw/v0.5.3/makel.mk; \
 	fi
+
+.PHONY: test
+test:
+	@EMACS=$(EMACS) cask exec buttercup -L .
 
 # Include makel.mk if present
 -include makel.mk

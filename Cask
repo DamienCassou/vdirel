@@ -4,4 +4,5 @@
 (package-file "vdirel.el")
 
 (development
- (depends-on "buttercup"))
+ (depends-on "buttercup")
+ (depends-on "undercover"))

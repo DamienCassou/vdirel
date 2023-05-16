@@ -25,6 +25,9 @@
 
 ;;; Code:
 
+(when (require 'undercover nil t)
+  (undercover "*.el"))
+
 (require 'vdirel)
 
 (describe "vdirel"
