@@ -25,24 +25,26 @@
 
 ;;; Code:
 
-(declare-function undercover "undercover")
-
 (when (require 'undercover nil t)
   (undercover "*.el"))
 
 (require 'vdirel)
 
-(require 'buttercup)
-
 (describe "vdirel"
   (describe "knows how to extract a contact's fullname"
     (it "when defined through N"
-      (expect (vdirel-contact-fullname '(("N" . "Damien;Cassou")))
+      (expect (vdirel-contact-fullname '(("N" . "Damien;Cassou")
+                                         ("EMAIL" . "me@foo.bar")))
               :to-equal "Damien Cassou"))
 
     (it "when defined through FN"
-      (expect (vdirel-contact-fullname '(("FN" . "Damien Cassou")))
-              :to-equal "Damien Cassou")))
+      (expect (vdirel-contact-fullname '(("FN" . "Damien Cassou")
+                                         ("EMAIL" . "me@foo.bar")))
+              :to-equal "Damien Cassou"))
+
+    (it "when missing, shows email"
+      (expect (vdirel-contact-fullname '(("EMAIL" . "foo@bar.com")))
+              :to-equal "foo@bar.com")))
 
   (describe "contact-property"
     (it "returns entry if property is found"
@@ -75,9 +77,9 @@
                  ("EMAIL;TYPE=home" . "me@bar.eu")))
               :to-equal '("me@foo.com" "me@bar.eu"))))
 
-  (describe "helm-email-candidates"
+  (describe "email-candidates"
     (it "list all emails of a contact"
-      (expect (vdirel--helm-email-candidates
+      (expect (vdirel--email-candidates
                '((("FN" . "Damien Cassou")
                   ("EMAIL" . "me@foo.com")
                   ("EMAIL;TYPE=home" . "me@bar.eu"))))
@@ -86,4 +88,5 @@
                 ("Damien Cassou <me@bar.eu>" . ("Damien Cassou" "me@bar.eu")))))))
 
 (provide 'vdirel-test)
+
 ;;; vdirel-test.el ends here
