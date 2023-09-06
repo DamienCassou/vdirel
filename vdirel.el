@@ -91,7 +91,11 @@ Return nil if PROPERTY is not in CONTACT."
 (defun vdirel-contact-emails (contact)
   "Return a list of CONTACT's email addresses."
   (vdirel--contact-matching-properties
-   (lambda (property) (string-match "^EMAIL" property))
+   (lambda (property)
+     (string-match
+      (rx (seq (opt (seq "item" (in "0-9") (char ".")))
+	       (seq "EMAIL")))
+      property))
    contact))
 
 

@@ -69,11 +69,17 @@
               :to-equal nil)))
 
   (describe "contact-emails"
-    (it "find every emails"
+    (it "find every email"
       (expect (vdirel-contact-emails
                '(("EMAIL" . "me@foo.com")
                  ("EMAIL;TYPE=home" . "me@bar.eu")))
-              :to-equal '("me@foo.com" "me@bar.eu"))))
+              :to-equal '("me@foo.com" "me@bar.eu")))
+
+    (it "know how to handle GMail VCARDs with multiple items"
+      (expect (vdirel-contact-emails
+               '(("item1.EMAIL;TYPE=PREF" . "arjen@acm.org")
+                 ("item2.EMAIL" . "arjenpdevries@gmail.com")))
+              :to-equal '("arjen@acm.org" "arjenpdevries@gmail.com"))))
 
   (describe "helm-email-candidates"
     (it "list all emails of a contact"
@@ -84,7 +90,17 @@
                   ("VDIREL-FILENAME" "foo.vcf"))))
               :to-equal
               '(("Damien Cassou <me@foo.com>" . ("Damien Cassou" "me@foo.com" ("foo.vcf")))
-                ("Damien Cassou <me@bar.eu>" . ("Damien Cassou" "me@bar.eu" ("foo.vcf"))))))))
+                ("Damien Cassou <me@bar.eu>" . ("Damien Cassou" "me@bar.eu" ("foo.vcf"))))))
+
+    (it "know how to handle Google Contacts VCARDs with multiple items"
+      (expect (vdirel--helm-email-candidates
+               '((("FN" . "Arjen de Vries")
+                  ("item1.EMAIL;TYPE=PREF" . "arjen@acm.org")
+                  ("item2.EMAIL" . "arjenpdevries@gmail.com")
+                  ("VDIREL-FILENAME" "foo.vcf"))))
+              :to-equal
+              '(("Arjen de Vries <arjen@acm.org>" . ("Arjen de Vries" "arjen@acm.org" ("foo.vcf")))
+                ("Arjen de Vries <arjenpdevries@gmail.com>" . ("Arjen de Vries" "arjenpdevries@gmail.com" ("foo.vcf"))))))))
 
 (provide 'vdirel-test)
 ;;; vdirel-test.el ends here
