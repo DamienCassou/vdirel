@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/DamienCassou/vdirel.svg)](https://travis-ci.org/DamienCassou/vdirel)
-[![Coverage Status](https://coveralls.io/repos/DamienCassou/vdirel/badge.svg)](https://coveralls.io/r/DamienCassou/vdirel)
+[![Build Status](https://github.com/DamienCassou/vdirel/actions/workflows/test.yml/badge.svg)](https://github.com/DamienCassou/vdirel/actions)
 [![MELPA](http://melpa.org/packages/vdirel-badge.svg)](http://melpa.org/#/vdirel)
 [![MELPA stable](http://stable.melpa.org/packages/vdirel-badge.svg)](http://stable.melpa.org/#/vdirel)
 [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)

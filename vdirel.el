@@ -33,7 +33,7 @@
 (require 'helm)
 
 (defgroup vdirel nil
-  "Manipulate vdir (i.e., vCard) repositories from Emacs"
+  "Manipulate vdir (i.e., vCard) repositories from Emacs."
   :group 'applications)
 
 (defcustom vdirel-repository "~/contacts"

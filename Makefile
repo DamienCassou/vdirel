@@ -1,6 +1,6 @@
-ELPA_DEPENDENCIES=package-lint let-alist buttercup org-vcard helm async
+ELPA_DEPENDENCIES=package-lint let-alist buttercup org-vcard helm async wfnames
 
-ELPA_ARCHIVES=melpa-stable gnu
+ELPA_ARCHIVES=melpa gnu
 
 TEST_BUTTERCUP_OPTIONS  = .
 LINT_CHECKDOC_FILES	= $(wildcard *.el) $(wildcard test/*.el)
