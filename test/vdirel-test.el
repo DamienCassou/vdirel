@@ -80,10 +80,11 @@
       (expect (vdirel--helm-email-candidates
                '((("FN" . "Damien Cassou")
                   ("EMAIL" . "me@foo.com")
-                  ("EMAIL;TYPE=home" . "me@bar.eu"))))
+                  ("EMAIL;TYPE=home" . "me@bar.eu")
+                  ("VDIREL-FILENAME" "foo.vcf"))))
               :to-equal
-              '(("Damien Cassou <me@foo.com>" . ("Damien Cassou" "me@foo.com"))
-                ("Damien Cassou <me@bar.eu>" . ("Damien Cassou" "me@bar.eu")))))))
+              '(("Damien Cassou <me@foo.com>" . ("Damien Cassou" "me@foo.com" ("foo.vcf")))
+                ("Damien Cassou <me@bar.eu>" . ("Damien Cassou" "me@bar.eu" ("foo.vcf"))))))))
 
 (provide 'vdirel-test)
 ;;; vdirel-test.el ends here
